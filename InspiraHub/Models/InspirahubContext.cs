@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace InspiraHub;
+namespace InspiraHub.Models;
 
 public partial class InspirahubContext : DbContext
 {
