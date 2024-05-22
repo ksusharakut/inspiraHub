@@ -22,8 +22,17 @@ public partial class InspirahubContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=inspirahub;Username=postgres;Password=hd65Hhwq8");
+    {
+        var dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
+        var dbPort = Environment.GetEnvironmentVariable("DATABASE_PORT");
+        var dbName = Environment.GetEnvironmentVariable("DATABASE_NAME");
+        var dbUsername = Environment.GetEnvironmentVariable("DATABASE_USERNAME");
+        var dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+
+        var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUsername};Password={dbPassword}";
+
+        optionsBuilder.UseNpgsql(connectionString);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

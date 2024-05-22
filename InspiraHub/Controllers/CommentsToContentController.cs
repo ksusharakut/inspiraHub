@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace InspiraHub.Controllers
 {
     [ApiController]
-    [Route("api/contents")]
-    public class ContentsController : ControllerBase
+    [Route("api/contents/{contentId}/comments")]
+    public class CommentsToContentController : ControllerBase
     {
         private readonly InspirahubContext _context;
-        private readonly ILogger<ContentsController> _logger;
+        private readonly ILogger<CommentsToContentController> _logger;
 
-        public ContentsController(InspirahubContext context, ILogger<ContentsController> logger)
+        public CommentsToContentController(InspirahubContext context, ILogger<CommentsToContentController> logger)
         {
             _context = context;
             _logger = logger;
@@ -19,96 +19,94 @@ namespace InspiraHub.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Content>> GetContent()
+        public ActionResult<IEnumerable<Comment>> GetCommentToContent()
         {
-            var contents = _context.Contents.ToList();
-            _logger.LogInformation("getting all contents");
-            return contents;
+            var comments = _context.Comments.ToList();
+
+            return comments;
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetContentById(int id)
+        public ActionResult GetCommentToContentById(int id)
         {
             if (id == 0)
             {
-                _logger.LogError("Get content Error with Id: " + id);
                 return BadRequest();
+                //_logger.LogError("Get user Error with Id: " + id);
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
-            if (content == null)
+            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            return Ok(content);
+            return Ok(comment);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Content> CreateContent([FromBody] Content content)
+        public ActionResult<Comment> CreateCommentToContent([FromBody] Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (content == null)
+            if (comment == null)
             {
-                return BadRequest(content);
+                return BadRequest(comment);
             }
-            if (content.Id > 0)
+            if (comment.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            content.Id = _context.Contents.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-            _context.Contents.Add(content);
+            comment.Id = _context.Comments.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            _context.Comments.Add(comment);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetContentById), new { id = content.Id }, content);
+            return CreatedAtAction(nameof(GetCommentToContentById), new { id = comment.Id }, comment);
         }
 
-        [HttpPut("{id:int}", Name = "UpdateContent")]
+        [HttpPut("{id:int}", Name = "UpdateCommentToContent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateContent(int id, [FromBody] Content content)
+        public IActionResult UpdateCommentToContent(int id, [FromBody] Comment comment)
         {
-            var existingContent = _context.Contents.FirstOrDefault(u => u.Id == id);
-            if (existingContent == null)
+            var existingComment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            if (existingComment == null)
             {
                 return BadRequest();
             }
 
-            existingContent.Preview = existingContent.Preview;
-            existingContent.User = existingContent.User;
-            existingContent.UserId = existingContent.UserId;
-            existingContent.Title = existingContent.Title;  
-            existingContent.Description = existingContent.Description;
-            existingContent.CreateAt = DateTime.UtcNow;
-            existingContent.ContentType = existingContent.ContentType;
+            existingComment.UserComment = existingComment.UserComment;
+            existingComment.UserName = existingComment.UserName;
+            existingComment.UserId = existingComment.UserId;
+            existingComment.User = existingComment.User;
+            existingComment.Content = existingComment.Content;
 
             _context.SaveChanges();
             return NoContent();
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialContent")]
+        [HttpPatch("{id:int}", Name = "UpdatePartialCommentToContent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialContent(int id, JsonPatchDocument<Content> patch)
+        public IActionResult UpdatePartialCommentToContent(int id, JsonPatchDocument<Comment> patch)
         {
             if (patch == null || id == 0)
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
-            if (content == null)
+            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            if (comment == null)
             {
                 return BadRequest();
             }
-            patch.ApplyTo(content, ModelState);
+            patch.ApplyTo(comment, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -117,22 +115,22 @@ namespace InspiraHub.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}", Name = "DeleteContent")]
+        [HttpDelete("{id:int}", Name = "DeleteCommentToContent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult DeleteContent(int id)
+        public IActionResult DeleteCommentToContent(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
-            if (content == null)
+            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            _context.Contents.Remove(content);
+            _context.Comments.Remove(comment);
             _context.SaveChanges();
             return NoContent();
         }
