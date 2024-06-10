@@ -20,6 +20,8 @@ public partial class InspirahubContext : DbContext
     public virtual DbSet<Content> Contents { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -125,8 +127,8 @@ public partial class InspirahubContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
         });
-        modelBuilder.HasSequence("main_sequence");
-        modelBuilder.HasSequence("my_first_sequence").StartsAt(5L);
+        modelBuilder.HasSequence("main_sequence"); //TODO: убрать
+        modelBuilder.HasSequence("my_first_sequence").StartsAt(5L); //TODO: Убрать
 
         OnModelCreatingPartial(modelBuilder);
     }
