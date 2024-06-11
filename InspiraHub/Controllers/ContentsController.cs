@@ -26,7 +26,9 @@ namespace InspiraHub.Controllers
             return contents;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}"),
+            Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,7 +39,7 @@ namespace InspiraHub.Controllers
                 _logger.LogError("Get content Error with Id: " + id);
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
+            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return NotFound();
@@ -45,7 +47,9 @@ namespace InspiraHub.Controllers
             return Ok(content);
         }
 
-        [HttpPost]
+        [HttpPost,
+            Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -64,19 +68,21 @@ namespace InspiraHub.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            content.Id = _context.Contents.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            content.Id = _context.Contents.OrderByDescending(cnt => cnt.Id).FirstOrDefault().Id + 1;
             _context.Contents.Add(content);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetContentById), new { id = content.Id }, content);
         }
 
-        [HttpPut("{id:int}", Name = "UpdateContent")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut("{id:int}", Name = "UpdateContent"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateContent(int id, [FromBody] Content content)
         {
-            var existingContent = _context.Contents.FirstOrDefault(u => u.Id == id);
+            var existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (existingContent == null)
             {
                 return BadRequest();
@@ -91,11 +97,19 @@ namespace InspiraHub.Controllers
             existingContent.ContentType = existingContent.ContentType;
 
             _context.SaveChanges();
-            return NoContent();
+            var contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            var result = new
+            {
+                Content = contentPut,
+                Message = "content was successfully updated"
+            };
+            return Ok(result);
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialContent")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPatch("{id:int}", Name = "UpdatePartialContent"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdatePartialContent(int id, JsonPatchDocument<Content> patch)
         {
@@ -103,7 +117,7 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
+            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return BadRequest();
@@ -114,11 +128,19 @@ namespace InspiraHub.Controllers
                 return BadRequest(ModelState);
             }
             _context.SaveChanges();
-            return NoContent();
+            var contentPatch = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            var result = new
+            {
+                Content = contentPatch,
+                Message = "content was successfully partial updated"
+            };
+            return Ok(result);
         }
 
-        [HttpDelete("{id:int}", Name = "DeleteContent")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete("{id:int}", Name = "DeleteContent"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteContent(int id)
@@ -127,14 +149,15 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(u => u.Id == id);
+            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return NotFound();
             }
             _context.Contents.Remove(content);
             _context.SaveChanges();
-            return NoContent();
+            var result = new { ContentDeletedId = id, Message = $"Content with ID {id} has been successfully deleted" };
+            return Ok(result);
         }
     }
 }

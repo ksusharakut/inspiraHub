@@ -6,20 +6,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 DotNetEnv.Env.Load();
 
-builder.Services.AddAuthentication(x =>
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(jwtOptions =>
 {
-    x.TokenValidationParameters = new TokenValidationParameters
+    jwtOptions.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSURE"),
         ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
@@ -50,9 +51,10 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
 
 app.UseAuthentication();
+
+app.UseRouting();
 
 app.UseAuthorization();
 

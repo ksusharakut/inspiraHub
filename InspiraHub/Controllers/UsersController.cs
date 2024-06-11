@@ -24,7 +24,10 @@ namespace InspiraHub.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [Authorize]
+        [HttpGet,
+             Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
@@ -33,7 +36,9 @@ namespace InspiraHub.Controllers
             return users;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}"),
+                         Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,7 +59,9 @@ namespace InspiraHub.Controllers
             return Ok(users);
         }
 
-        [HttpPost]
+        [HttpPost,
+            Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -96,8 +103,10 @@ namespace InspiraHub.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
-        [HttpPut("{id:int}", Name ="UpdateUser")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut("{id:int}", Name ="UpdateUser"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateUser(int id, [FromBody]User user)
@@ -120,11 +129,20 @@ namespace InspiraHub.Controllers
             _context.SaveChanges();
 
             _logger.Log("user was successfully updated", "");
-            return NoContent();
+            var userPut = _context.Users.FirstOrDefault(u => u.Id == id);
+            var result = new
+            {
+                User = userPut,
+                Message = "user was successfully  updated"
+            };
+            return Ok(result);
+            
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialUser") ]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPatch("{id:int}", Name = "UpdatePartialUser"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdatePartialUser(int id, JsonPatchDocument<User> patch)
         {
@@ -147,44 +165,41 @@ namespace InspiraHub.Controllers
             }
             _context.SaveChanges();
             _logger.Log("user was successfully partial updated", "");
-            return NoContent();
+
+            var userPatch = _context.Users.FirstOrDefault(u => u.Id == id);
+            var result = new
+            {
+                User = userPatch,
+                Message = "user was successfully partial updated"
+            };
+            return Ok(result);
         }
 
-        [Authorize]
-        [HttpDelete("{id:int}", Name = "DeleteUser")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[Authorize]
+        [HttpDelete("{id:int}", Name = "DeleteUser"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteUser(int id)
         {
-            try
+            if (id == 0)
             {
-                var userIdentity = HttpContext.User.Identity;
-                _logger.Log($"User {userIdentity.Name} is attempting to delete user with id: {id}","");
-
-                if (id == 0)
-                {
-                    _logger.Log("DeleteUser: Bad request, id is 0","");
-                    return BadRequest();
-                }
-
-                var user = _context.Users.FirstOrDefault(u => u.Id == id);
-                if (user == null)
-                {
-                    _logger.Log($"DeleteUser: User with id {id} not found","");
-                    return NotFound();
-                }
-
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-                _logger.Log($"User {userIdentity.Name} successfully deleted user with id: {id}","");
-                return NoContent();
+                _logger.Log("bad request", "error");
+                return BadRequest();
             }
-            catch (Exception ex)
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
             {
-                _logger.Log($"DeleteUser: An error occurred: {ex.Message}","");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger.Log("not found user with Id: " + id, "error");
+                return NotFound();
             }
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            _logger.Log("user was successfully deleted: " + id, "");
+            var result = new { UserDeletedId = id, Message = $"User with ID {id} has been successfully deleted" };
+            return Ok(result);
         }
     }
 

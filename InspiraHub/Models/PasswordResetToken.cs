@@ -1,4 +1,6 @@
-﻿namespace InspiraHub.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace InspiraHub.Models
 {
     public class PasswordResetToken
     {

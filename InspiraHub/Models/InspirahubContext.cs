@@ -97,6 +97,27 @@ public partial class InspirahubContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("content_iduser_fkey");
         });
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("password_reset_tokens_pkey");
+
+            entity.ToTable("password_reset_tokens");
+
+            entity.Property(e => e.Id)
+            .HasDefaultValueSql("nextval('password_reset_tokens_Id_seq'::regclass)")
+            .HasColumnName("id");
+            entity.Property(e => e.Email)
+            .IsRequired()
+            .HasMaxLength(225)
+            .HasColumnName("email");
+            entity.Property(e => e.Token)
+       .IsRequired()
+       .HasMaxLength(255)
+       .HasColumnName("token");
+            entity.Property(e => e.CreatedAt)
+               .HasColumnType("timestamp without time zone")
+               .HasColumnName("created_at");
+        });
 
         modelBuilder.Entity<User>(entity =>
         {

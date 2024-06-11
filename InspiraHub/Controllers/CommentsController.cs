@@ -27,7 +27,9 @@ namespace InspiraHub.Controllers
             return comments;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}"),
+            Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -38,7 +40,7 @@ namespace InspiraHub.Controllers
                 return BadRequest();
                 //_logger.LogError("Get user Error with Id: " + id);
             }
-            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return NotFound();
@@ -46,7 +48,9 @@ namespace InspiraHub.Controllers
             return Ok(comment);
         }
 
-        [HttpPost]
+        [HttpPost,
+            Produces("application/json"),
+            Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -65,19 +69,21 @@ namespace InspiraHub.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            comment.Id = _context.Comments.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            comment.Id = _context.Comments.OrderByDescending(cmn => cmn.Id).FirstOrDefault().Id + 1;
             _context.Comments.Add(comment);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetCommentById), new { id = comment.Id }, comment);
         }
 
-        [HttpPut("{id:int}", Name = "UpdateComment")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut("{id:int}", Name = "UpdateComment"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateComment(int id, [FromBody] Comment comment)
         {
-            var existingComment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            var existingComment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (existingComment == null)
             {
                 return BadRequest();
@@ -90,11 +96,19 @@ namespace InspiraHub.Controllers
             existingComment.Content = existingComment.Content;
 
             _context.SaveChanges();
-            return NoContent();
+            var commentPut = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            var result = new
+            {
+                User = commentPut,
+                Message = "comment was successfully updated"
+            };
+            return Ok(result);
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialComment")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPatch("{id:int}", Name = "UpdatePartialComment"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdatePartialComment(int id, JsonPatchDocument<Comment> patch)
         {
@@ -102,7 +116,7 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return BadRequest();
@@ -113,11 +127,19 @@ namespace InspiraHub.Controllers
                 return BadRequest(ModelState);
             }
             _context.SaveChanges();
-            return NoContent();
+            var commentPatch = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            var result = new
+            {
+                User = commentPatch,
+                Message = "comment was successfully partial updated"
+            };
+            return Ok(result);
         }
 
-        [HttpDelete("{id:int}", Name = "DeleteComment")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete("{id:int}", Name = "DeleteComment"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteComment(int id)
@@ -126,14 +148,15 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return NotFound();
             }
             _context.Comments.Remove(comment);
             _context.SaveChanges();
-            return NoContent();
+            var result = new { commentDeletedId = id, Message = $"comment with ID {id} has been successfully deleted" };
+            return Ok(result);
         }
     }
 }
