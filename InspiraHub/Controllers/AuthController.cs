@@ -136,7 +136,7 @@ namespace InspiraHub.Controllers
             var user = GetUserByEmail(passRecovery.Email, passRecovery.Token);
             if (user == null)
             {
-                return NotFound(new { error = "Пользователь не найден или неверный токен." });
+                return NotFound(new { error = "Пользователь не найден или неверный код, попробуйте заново или вернитьесь к генерации кода подтверждения" });
             }
 
             // Обновление пароля пользователя
