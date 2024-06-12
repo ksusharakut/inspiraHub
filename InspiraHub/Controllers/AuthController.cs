@@ -191,12 +191,12 @@ namespace InspiraHub.Controllers
             };
 
             var token = new JwtSecurityToken(
-                Environment.GetEnvironmentVariable("JWT_ISSURE"),
+                Environment.GetEnvironmentVariable("JWT_ISSUER"),
                 Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                 claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddDays(7),
                 signingCredentials: credentials);
-
+            
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return new

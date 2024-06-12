@@ -23,7 +23,7 @@ builder.Services.AddAuthentication(options =>
 {
     jwtOptions.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSURE"),
+        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
         ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"))),
         ValidateIssuer = true,
@@ -52,10 +52,10 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
 
 app.UseAuthentication();
 
-app.UseRouting();
 
 app.UseAuthorization();
 
