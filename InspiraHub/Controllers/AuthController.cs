@@ -119,7 +119,6 @@ namespace InspiraHub.Controllers
             }
         }
 
-
         [HttpPost("reset_password")]
         [Produces("application/json")]
         [Consumes("application/json")]
@@ -223,7 +222,6 @@ namespace InspiraHub.Controllers
             {
                 return currentUser;
             }
-
             return null;
         }
         private bool IsValidEmail(string email)
@@ -240,9 +238,8 @@ namespace InspiraHub.Controllers
         }
         private string GenerateCode()
         {
-            // Простой способ генерации кода - использование Random
             var random = new Random();
-            return random.Next(100000, 999999).ToString(); // Генерирует случайное число от 100000 до 999999
+            return random.Next(100000, 999999).ToString(); 
         }
         public User GetUserByEmail(string email, string token)
         {
@@ -253,7 +250,6 @@ namespace InspiraHub.Controllers
                 DateTime createdAtUtc = passwordResetToken.CreatedAt.ToUniversalTime().Date;
                 return _context.Users.FirstOrDefault(u => u.Email == email);
             }
-
             return null;
         }
     }
