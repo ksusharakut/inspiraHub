@@ -80,7 +80,7 @@ namespace InspiraHub.Controllers
             try
             {
                 string token = GenerateCode();
-                var passResetToken = new PasswordResetToken
+                PasswordResetToken passResetToken = new PasswordResetToken
                 {
                     Email = sendEmail.Email,
                     Token = token,
@@ -90,19 +90,19 @@ namespace InspiraHub.Controllers
                 _context.PasswordResetTokens.Add(passResetToken);
                 _context.SaveChanges(); // Запись в базу данных до отправки письма
 
-                var smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER");
-                var port = Environment.GetEnvironmentVariable("SMTP_PORT");
+                string smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER");
+                string port = Environment.GetEnvironmentVariable("SMTP_PORT");
 
-                var username = Environment.GetEnvironmentVariable("USERNAME");
-                var password = Environment.GetEnvironmentVariable("PASSWORD");
+                string username = Environment.GetEnvironmentVariable("USERNAME");
+                string password = Environment.GetEnvironmentVariable("PASSWORD");
 
-                using (var client = new SmtpClient(smtpServer, Convert.ToInt16(port)))
+                using (SmtpClient client = new SmtpClient(smtpServer, Convert.ToInt16(port)))
                 {
                     client.Credentials = new NetworkCredential(username, password);
                     client.EnableSsl = false;  // Отключено, так как не используется SSL/TLS на этом порту
 
                     // Создание сообщения
-                    var message = new MailMessage();
+                    MailMessage message = new MailMessage();
                     message.From = new MailAddress(Environment.GetEnvironmentVariable("FROM_EMAIL"));
                     message.To.Add(passResetToken.Email);
                     message.Subject = "Код восстановления пароля";
@@ -132,10 +132,16 @@ namespace InspiraHub.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = GetUserByEmail(passRecovery.Email, passRecovery.Token);
+            if (passRecovery.NewPassword != passRecovery.RepeatPassword)
+            {
+                ModelState.AddModelError("RepeatPassword", "Пароли не совпадают.");
+                return BadRequest(ModelState);
+            }
+
+            User user = GetUserByEmail(passRecovery.Email, passRecovery.Token);
             if (user == null)
             {
-                return NotFound(new { error = "Пользователь не найден или неверный код, попробуйте заново или вернитьесь к генерации кода подтверждения" });
+                return NotFound(new { error = "Пользователь не найден или неверный код, попробуйте заново или вернитесь к генерации кода подтверждения" });
             }
 
             // Обновление пароля пользователя
@@ -146,12 +152,13 @@ namespace InspiraHub.Controllers
             _context.SaveChanges();
 
             // Удаление использованного токена 
-            var token = _context.PasswordResetTokens.FirstOrDefault(t => t.Email == passRecovery.Email && t.Token == passRecovery.Token);
-            if (token != null) 
+            PasswordResetToken token = _context.PasswordResetTokens.FirstOrDefault(t => t.Email == passRecovery.Email && t.Token == passRecovery.Token);
+            if (token != null)
             {
                 _context.PasswordResetTokens.Remove(token);
                 _context.SaveChanges();
             }
+
             return Ok(new { message = "Пароль успешно обновлен." });
         }
 
@@ -161,11 +168,11 @@ namespace InspiraHub.Controllers
             Consumes("application/json")]
         public IActionResult Login([FromBody] UserLogInDTO loginModel)
         {
-            var user = Authenticate(loginModel);
+            User user = Authenticate(loginModel);
 
             if (user != null)
             {
-                var response = Generate(user);
+                object response = Generate(user);
                 return Ok(response);
             }
 
@@ -175,10 +182,10 @@ namespace InspiraHub.Controllers
 
         private object Generate(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")));
+            SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            Claim[] claims = new[]
             {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Username),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
@@ -189,14 +196,14 @@ namespace InspiraHub.Controllers
                     new Claim("dateBirth", user.DateBirth.ToString())
             };
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new JwtSecurityToken(
                 Environment.GetEnvironmentVariable("JWT_ISSUER"),
                 Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                 claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: credentials);
             
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return new
             {
@@ -216,7 +223,7 @@ namespace InspiraHub.Controllers
 
         private User Authenticate(UserLogInDTO loginModel)
         {
-            var currentUser = _context.Users.FirstOrDefault(u => u.Email.ToLower() ==
+            User currentUser = _context.Users.FirstOrDefault(u => u.Email.ToLower() ==
                loginModel.Email.ToLower());
             if (currentUser != null && BCrypt.Net.BCrypt.Verify(loginModel.Password, currentUser.Password))
             {
@@ -228,7 +235,7 @@ namespace InspiraHub.Controllers
         {
             try
             {
-                var addr = new System.Net.Mail.MailAddress(email);
+                System.Net.Mail.MailAddress addr = new System.Net.Mail.MailAddress(email);
                 return addr.Address == email;
             }
             catch
@@ -238,12 +245,12 @@ namespace InspiraHub.Controllers
         }
         private string GenerateCode()
         {
-            var random = new Random();
+            Random random = new Random();
             return random.Next(100000, 999999).ToString(); 
         }
         public User GetUserByEmail(string email, string token)
         {
-            var passwordResetToken = _context.PasswordResetTokens.FirstOrDefault(t => t.Email == email && t.Token == token);
+            PasswordResetToken passwordResetToken = _context.PasswordResetTokens.FirstOrDefault(t => t.Email == email && t.Token == token);
 
             if (passwordResetToken != null)
             {

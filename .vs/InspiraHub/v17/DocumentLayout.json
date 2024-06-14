@@ -3,12 +3,36 @@
   "WorkspaceRootPath": "D:\\Visual_Studio_Projects\\InspiraHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\contentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\contentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\dto\\passwordrecoverydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\dto\\passwordrecoverydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\commentscontentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\commentscontentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,24 +43,8 @@
       "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\.env||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\commentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\contentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\contentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\controllers\\commentscontentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\controllers\\commentscontentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\service\\schedulerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\service\\schedulerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\dto\\passwordrecoverydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\dto\\passwordrecoverydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\passwordresettoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -71,16 +79,8 @@
       "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\dto\\userlogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\dto\\useremaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\dto\\useremaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|solutionrelative:inspirahub\\models\\content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A02D8721-6F3B-4D9B-A077-BBE1E3C6026E}|InspiraHub\\InspiraHub.csproj|d:\\visual_studio_projects\\inspirahub\\inspirahub\\models\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -98,20 +98,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": ".env",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\.env",
-              "RelativeDocumentMoniker": "InspiraHub\\.env",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\.env",
-              "RelativeToolTip": "InspiraHub\\.env",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAlAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-06-12T12:07:11.509Z",
-              "EditorCaption": ""
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "InspiraHub\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAIYAAAAAAAAAAAAmwJ4AAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T11:16:09.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\User.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Models\\User.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\User.cs",
+              "RelativeToolTip": "InspiraHub\\Models\\User.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAzwBQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T11:54:04.835Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CommentsContentController.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\CommentsContentController.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\CommentsContentController.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\CommentsContentController.cs",
+              "RelativeToolTip": "InspiraHub\\Controllers\\CommentsContentController.cs",
+              "ViewState": "AQIAAIwAAAAAAAAAAAAswJ4AAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-11T09:27:53.198Z"
             },
             {
               "$type": "Document",
@@ -121,53 +144,62 @@
               "RelativeDocumentMoniker": "InspiraHub\\Controllers\\CommentsController.cs",
               "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\CommentsController.cs",
               "RelativeToolTip": "InspiraHub\\Controllers\\CommentsController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAIYAAAAAAAAAAAAswJgAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T12:02:36.096Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-12T12:02:36.096Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Program.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Program.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Program.cs",
-              "RelativeToolTip": "InspiraHub\\Program.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAACEAAAADAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T07:33:31.364Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "ContentsController.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\ContentsController.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Controllers\\ContentsController.cs",
               "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\ContentsController.cs",
               "RelativeToolTip": "InspiraHub\\Controllers\\ContentsController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAIBJwAoAAAA0AAAA",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAwwDIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T12:02:37.139Z",
+              "WhenOpened": "2024-06-12T12:02:37.139Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PasswordRecoveryDTO.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
+              "RelativeToolTip": "InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T11:50:19.143Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Content.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\Content.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Models\\Content.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\Content.cs",
+              "RelativeToolTip": "InspiraHub\\Models\\Content.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAAABgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-10T11:51:48.307Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "InspiraHub\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAHcAAAAJAAAA",
+              "DocumentIndex": 6,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\UsersController.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "InspiraHub\\Controllers\\UsersController.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAYwHMAAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:16:09.047Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T13:10:28.734Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "SchedulerService.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Service\\SchedulerService.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Service\\SchedulerService.cs",
@@ -175,38 +207,35 @@
               "RelativeToolTip": "InspiraHub\\Service\\SchedulerService.cs",
               "ViewState": "AQIAAAgAAAAAAAAAAAAAwAoAAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T14:33:20.201Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T14:33:20.201Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "PasswordRecoveryDTO.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
-              "RelativeToolTip": "InspiraHub\\Models\\DTO\\PasswordRecoveryDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAABAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Program.cs",
+              "RelativeDocumentMoniker": "InspiraHub\\Program.cs",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Program.cs",
+              "RelativeToolTip": "InspiraHub\\Program.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACEAAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:50:19.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-12T07:33:31.364Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\UsersController.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "InspiraHub\\Controllers\\UsersController.cs",
-              "ViewState": "AQIAAI0AAAAAAAAAAAAowI8AAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T13:10:28.734Z",
-              "EditorCaption": ""
+              "DocumentIndex": 9,
+              "Title": ".env",
+              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\.env",
+              "RelativeDocumentMoniker": "InspiraHub\\.env",
+              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\.env",
+              "RelativeToolTip": "InspiraHub\\.env",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-12T12:07:11.509Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "InspirahubContextModelSnapshot.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Migrations\\InspirahubContextModelSnapshot.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Migrations\\InspirahubContextModelSnapshot.cs",
@@ -214,25 +243,11 @@
               "RelativeToolTip": "InspiraHub\\Migrations\\InspirahubContextModelSnapshot.cs",
               "ViewState": "AQIAAG0AAAAAAAAAAAAswH0AAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T18:07:12.771Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T18:07:12.771Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CommentsContentController.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\CommentsContentController.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Controllers\\CommentsContentController.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Controllers\\CommentsContentController.cs",
-              "RelativeToolTip": "InspiraHub\\Controllers\\CommentsContentController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-11T09:27:53.198Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "20240610180947_CreateUsersTable.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Migrations\\20240610180947_CreateUsersTable.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Migrations\\20240610180947_CreateUsersTable.cs",
@@ -240,12 +255,11 @@
               "RelativeToolTip": "InspiraHub\\Migrations\\20240610180947_CreateUsersTable.cs",
               "ViewState": "AQIAAAkAAAAAAAAAAAAQwBUAAABMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T18:09:48.2Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T18:09:48.2Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "20240610181234_CreateContentTable.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Migrations\\20240610181234_CreateContentTable.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Migrations\\20240610181234_CreateContentTable.cs",
@@ -253,12 +267,11 @@
               "RelativeToolTip": "InspiraHub\\Migrations\\20240610181234_CreateContentTable.cs",
               "ViewState": "AQIAAAYAAAAAAAAAAIBQwBcAAABMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T18:12:34.191Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T18:12:34.191Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "PasswordResetToken.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\PasswordResetToken.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Models\\PasswordResetToken.cs",
@@ -266,12 +279,11 @@
               "RelativeToolTip": "InspiraHub\\Models\\PasswordResetToken.cs",
               "ViewState": "AQIAAAEAAAAAAAAAAAAQwAwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:50:08.201Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T11:50:08.201Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "20240610192012_CreateCommentTable.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Migrations\\20240610192012_CreateCommentTable.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Migrations\\20240610192012_CreateCommentTable.cs",
@@ -279,12 +291,11 @@
               "RelativeToolTip": "InspiraHub\\Migrations\\20240610192012_CreateCommentTable.cs",
               "ViewState": "AQIAABcAAAAAAAAAAAAkwCQAAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T19:20:12.341Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T19:20:12.341Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "20240610192627_CreatePasswordResetToken.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Migrations\\20240610192627_CreatePasswordResetToken.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Migrations\\20240610192627_CreatePasswordResetToken.cs",
@@ -292,12 +303,11 @@
               "RelativeToolTip": "InspiraHub\\Migrations\\20240610192627_CreatePasswordResetToken.cs",
               "ViewState": "AQIAAAYAAAAAAAAAAIBQwA8AAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T19:26:27.831Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T19:26:27.831Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "InspirahubContext.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\InspirahubContext.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Models\\InspirahubContext.cs",
@@ -305,12 +315,11 @@
               "RelativeToolTip": "InspiraHub\\Models\\InspirahubContext.cs",
               "ViewState": "AQIAAFYAAAAAAAAAAIBJwHcAAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T12:37:43.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T12:37:43.436Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "UserLogInDTO.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\UserLogInDTO.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Models\\DTO\\UserLogInDTO.cs",
@@ -318,38 +327,11 @@
               "RelativeToolTip": "InspiraHub\\Models\\DTO\\UserLogInDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T13:37:06.05Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\User.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Models\\User.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\User.cs",
-              "RelativeToolTip": "InspiraHub\\Models\\User.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:54:04.835Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T13:37:06.05Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 19,
-              "Title": "Content.cs",
-              "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\Content.cs",
-              "RelativeDocumentMoniker": "InspiraHub\\Models\\Content.cs",
-              "ToolTip": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\Content.cs",
-              "RelativeToolTip": "InspiraHub\\Models\\Content.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAkwBkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:51:48.307Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
               "Title": "UserEmailDTO.cs",
               "DocumentMoniker": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\Models\\DTO\\UserEmailDTO.cs",
               "RelativeDocumentMoniker": "InspiraHub\\Models\\DTO\\UserEmailDTO.cs",
@@ -357,8 +339,7 @@
               "RelativeToolTip": "InspiraHub\\Models\\DTO\\UserEmailDTO.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-11T09:33:15.524Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-11T09:33:15.524Z"
             },
             {
               "$type": "Document",
@@ -370,8 +351,7 @@
               "RelativeToolTip": "InspiraHub\\Models\\Comment.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T11:54:14.358Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T11:54:14.358Z"
             },
             {
               "$type": "Document",

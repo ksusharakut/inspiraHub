@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace InspiraHub.Models;
 
@@ -21,5 +23,6 @@ public partial class Content
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
+    //[System.Text.Json.Serialization.JsonIgnore]
     public virtual User User { get; set; } = null!;
 }

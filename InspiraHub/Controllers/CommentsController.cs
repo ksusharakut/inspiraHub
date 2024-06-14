@@ -22,7 +22,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Comment>> GetComment()
         {
-            var comments = _context.Comments.ToList();
+            List<Comment> comments = _context.Comments.ToList();
 
             return comments;
         }
@@ -40,7 +40,7 @@ namespace InspiraHub.Controllers
                 return BadRequest();
                 //_logger.LogError("Get user Error with Id: " + id);
             }
-            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            Comment comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return NotFound();
@@ -83,7 +83,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateComment(int id, [FromBody] Comment comment)
         {
-            var existingComment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            Comment existingComment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (existingComment == null)
             {
                 return BadRequest();
@@ -96,8 +96,8 @@ namespace InspiraHub.Controllers
             existingComment.Content = existingComment.Content;
 
             _context.SaveChanges();
-            var commentPut = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
-            var result = new
+            Comment commentPut = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            object result = new
             {
                 User = commentPut,
                 Message = "comment was successfully updated"
@@ -116,7 +116,7 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            Comment comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return BadRequest();
@@ -127,8 +127,8 @@ namespace InspiraHub.Controllers
                 return BadRequest(ModelState);
             }
             _context.SaveChanges();
-            var commentPatch = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
-            var result = new
+            Comment commentPatch = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            object result = new
             {
                 User = commentPatch,
                 Message = "comment was successfully partial updated"
@@ -148,14 +148,14 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+            Comment comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)
             {
                 return NotFound();
             }
             _context.Comments.Remove(comment);
             _context.SaveChanges();
-            var result = new { commentDeletedId = id, Message = $"comment with ID {id} has been successfully deleted" };
+            object result = new { commentDeletedId = id, Message = $"comment with ID {id} has been successfully deleted" };
             return Ok(result);
         }
     }

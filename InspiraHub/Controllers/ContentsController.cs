@@ -1,4 +1,5 @@
 ﻿using InspiraHub.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Content>> GetContent()
         {
-            var contents = _context.Contents.ToList();
+            List<Content> contents = _context.Contents.ToList();
             _logger.LogInformation("getting all contents");
             return contents;
         }
@@ -39,7 +40,7 @@ namespace InspiraHub.Controllers
                 _logger.LogError("Get content Error with Id: " + id);
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            Content content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return NotFound();
@@ -47,6 +48,7 @@ namespace InspiraHub.Controllers
             return Ok(content);
         }
 
+        [Authorize]
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
@@ -55,22 +57,42 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Content> CreateContent([FromBody] Content content)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             if (content == null)
             {
-                return BadRequest(content);
+                return BadRequest("Content is null.");
             }
             if (content.Id > 0)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Content ID should not be set.");
             }
 
-            content.Id = _context.Contents.OrderByDescending(cnt => cnt.Id).FirstOrDefault().Id + 1;
+            // Получение идентификатора пользователя из JWT-токена
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User claim not found in token.");
+            }
+
+            if (!long.TryParse(userIdClaim.Value, out long userIdFromToken))
+            {
+                return Unauthorized("Invalid user id in token.");
+            }
+
+            // Получение пользователя из базы данных
+            User user = _context.Users.Find(userIdFromToken);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            // Установка полей
+            content.UserId = userIdFromToken;
+            content.User = user;
+            content.CreateAt = DateTime.Now;
+
             _context.Contents.Add(content);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(GetContentById), new { id = content.Id }, content);
         }
 
@@ -82,7 +104,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateContent(int id, [FromBody] Content content)
         {
-            var existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            Content existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (existingContent == null)
             {
                 return BadRequest();
@@ -97,8 +119,8 @@ namespace InspiraHub.Controllers
             existingContent.ContentType = existingContent.ContentType;
 
             _context.SaveChanges();
-            var contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-            var result = new
+            Content contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            object result = new
             {
                 Content = contentPut,
                 Message = "content was successfully updated"
@@ -117,7 +139,7 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            Content content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return BadRequest();
@@ -128,8 +150,8 @@ namespace InspiraHub.Controllers
                 return BadRequest(ModelState);
             }
             _context.SaveChanges();
-            var contentPatch = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-            var result = new
+            Content contentPatch = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            object result = new
             {
                 Content = contentPatch,
                 Message = "content was successfully partial updated"
@@ -137,6 +159,8 @@ namespace InspiraHub.Controllers
             return Ok(result);
         }
 
+
+        [Authorize]
         [HttpDelete("{id:int}", Name = "DeleteContent"),
             Produces("application/json"),
             Consumes("application/json")]
@@ -149,14 +173,14 @@ namespace InspiraHub.Controllers
             {
                 return BadRequest();
             }
-            var content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+            Content content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return NotFound();
             }
             _context.Contents.Remove(content);
             _context.SaveChanges();
-            var result = new { ContentDeletedId = id, Message = $"Content with ID {id} has been successfully deleted" };
+            object result = new { ContentDeletedId = id, Message = $"Content with ID {id} has been successfully deleted" };
             return Ok(result);
         }
     }

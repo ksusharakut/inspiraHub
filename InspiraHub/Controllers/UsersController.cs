@@ -31,7 +31,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            var users = _context.Users.ToList();
+            List<User> users = _context.Users.ToList();    
             _logger.Log("getting all users", "");
             return users;
         }
@@ -51,7 +51,7 @@ namespace InspiraHub.Controllers
                 _logger.Log("Get user Error with Id: " + id, "error");
                 return BadRequest();
             }
-            var users = _context.Users.FirstOrDefault(u => u.Id == id);
+            User users = _context.Users.FirstOrDefault(u => u.Id == id);
             if(users == null)
             {
                 _logger.Log("not found user with Id: " + id, "error");
@@ -61,7 +61,7 @@ namespace InspiraHub.Controllers
             return Ok(users);
         }
 
-        [Authorize]
+        [Authorize] //TODO: сделать роли, и этот эндпоинт будет доступен только администратору
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
@@ -113,15 +113,13 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
         {
-            // Получение идентификатора пользователя из JWT-токена
-            var userIdClaim = User.FindFirst("id");
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
                 _logger.Log("User claim not found", "error");
                 return Unauthorized();
             }
 
-            // Преобразование идентификатора пользователя из токена в int
             int userIdFromToken;
             if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
             {
@@ -129,21 +127,19 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            // Проверка совпадения идентификаторов
             if (id != userIdFromToken)
             {
                 _logger.Log("User tried to delete another user", "error");
                 return Forbid();
             }
 
-            var existingUser = _context.Users.FirstOrDefault(u => u.Id == id);
+            User existingUser = _context.Users.FirstOrDefault(u => u.Id == id);
             if (existingUser == null)
             {
                 _logger.Log("bad request", "error");
                 return BadRequest();
             }
 
-            // Обновление полей
             existingUser.Username = updatedUser.Username;
             existingUser.UpdatedAt = DateTime.Now;
             if (!string.IsNullOrEmpty(updatedUser.Password))
@@ -155,12 +151,11 @@ namespace InspiraHub.Controllers
             existingUser.DateBirth = updatedUser.DateBirth;
             existingUser.Name = updatedUser.Name;
 
-
             _context.SaveChanges();
 
             _logger.Log("user was successfully updated", "");
-            var userPut = _context.Users.FirstOrDefault(u => u.Id == id);
-            var result = new
+            User userPut = _context.Users.FirstOrDefault(u => u.Id == id);
+            object result = new
             {
                 User = userPut,
                 Message = "user was successfully  updated"
@@ -183,15 +178,13 @@ namespace InspiraHub.Controllers
                 return BadRequest();
             }
 
-            // Получение идентификатора пользователя из JWT-токена
-            var userIdClaim = User.FindFirst("id");
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
                 _logger.Log("User claim not found", "error");
                 return Unauthorized();
             }
 
-            // Преобразование идентификатора пользователя из токена в int
             int userIdFromToken;
             if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
             {
@@ -199,14 +192,13 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            // Проверка совпадения идентификаторов
             if (id != userIdFromToken)
             {
                 _logger.Log("User tried to delete another user", "error");
                 return Forbid();
             }
 
-            var user = _context.Users.FirstOrDefault(u =>u.Id == id);
+            User user = _context.Users.FirstOrDefault(u =>u.Id == id);
             if(user == null)
             {
                 _logger.Log("bad request", "error");
@@ -221,8 +213,8 @@ namespace InspiraHub.Controllers
             _context.SaveChanges();
             _logger.Log("user was successfully partial updated", "");
 
-            var userPatch = _context.Users.FirstOrDefault(u => u.Id == id);
-            var result = new
+            User userPatch = _context.Users.FirstOrDefault(u => u.Id == id);
+            object result = new
             {
                 User = userPatch,
                 Message = "user was successfully partial updated"
@@ -240,7 +232,6 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteUser(int id)
         {
-            // Получение идентификатора пользователя из JWT-токена
             var userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
@@ -248,7 +239,6 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            // Преобразование идентификатора пользователя из токена в int
             int userIdFromToken;
             if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
             {
@@ -256,27 +246,24 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            // Проверка совпадения идентификаторов
             if (id != userIdFromToken)
             {
                 _logger.Log("User tried to delete another user", "error");
                 return Forbid();
             }
 
-            // Проверка, существует ли пользователь
-            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            User user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 _logger.Log($"User with Id {id} not found", "error");
                 return NotFound();
             }
 
-            // Удаление пользователя
             _context.Users.Remove(user);
             _context.SaveChanges();
             _logger.Log($"User {id} was successfully deleted", "info");
 
-            var result = new { UserDeletedId = id, Message = $"User with ID {id} has been successfully deleted" };
+            object result = new { UserDeletedId = id, Message = $"User with ID {id} has been successfully deleted" };
             return Ok(result);
         }
     }
