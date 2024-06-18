@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj": {}
+    "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj": {}
   },
   "projects": {
-    "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj": {
+    "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
         "projectName": "InspiraHub",
-        "projectPath": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
+        "projectPath": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\obj\\",
+        "outputPath": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\общие компоненты вижуалки\\NuGetPackages"

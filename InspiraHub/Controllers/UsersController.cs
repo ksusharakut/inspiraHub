@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using BCrypt.Net;
+using InspiraHub.Models.DTO;
 
 namespace InspiraHub.Controllers
 {
@@ -26,49 +27,74 @@ namespace InspiraHub.Controllers
 
         [Authorize]
         [HttpGet,
-             Produces("application/json"),
+            Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public ActionResult<IEnumerable<UserWithoutPasswordDTO>> GetUsers()
         {
-            List<User> users = _context.Users.ToList();    
-            _logger.Log("getting all users", "");
-            return users;
-        }
+            // Получаем всех пользователей из базы данных
+            List<User> usersFromDb = _context.Users.ToList();
 
+            // Преобразуем пользователей в UserWithoutPasswordDTO
+            List<UserWithoutPasswordDTO> usersDTO = usersFromDb.Select(u => new UserWithoutPasswordDTO
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                UpdatedAt = u.UpdatedAt,
+                Name = u.Name,
+                LastName = u.LastName,
+                DateBirth = u.DateBirth
+            }).ToList();
+
+            _logger.Log("getting all users", "");
+            return usersDTO;
+        }
 
         [Authorize]
         [HttpGet("{id:int}"),
-                         Produces("application/json"),
+            Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetUserById(int id)
+        public ActionResult<UserWithoutPasswordDTO> GetUserById(int id)
         {
             if (id == 0)
             {
                 _logger.Log("Get user Error with Id: " + id, "error");
                 return BadRequest();
             }
-            User users = _context.Users.FirstOrDefault(u => u.Id == id);
-            if(users == null)
+            User user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if(user == null)
             {
                 _logger.Log("not found user with Id: " + id, "error");
                 return NotFound();
             }
             _logger.Log("getting user with id: " + id, "");
-            return Ok(users);
+
+            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            {
+                Id = user.Id,
+                Username = user.Name,
+                Email = user.Email,
+                UpdatedAt = user.UpdatedAt,
+                Name = user.Name,
+                LastName = user.LastName,
+                DateBirth = user.DateBirth
+            };
+            return Ok(userDTO);
         }
 
-        [Authorize] //TODO: сделать роли, и этот эндпоинт будет доступен только администратору
+        [Authorize]
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<User> CreateUser([FromBody] User user)
+        public ActionResult<UserWithoutPasswordDTO> CreateUser([FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -95,13 +121,25 @@ namespace InspiraHub.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "User ID should not be set manually");
             }
 
+            user.UpdatedAt = DateTime.Now;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             _context.Users.Add(user);
             _context.SaveChanges();
             _logger.Log("User was created", "");
 
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                UpdatedAt = user.UpdatedAt,
+                Name = user.Name,
+                LastName = user.LastName,
+                DateBirth = user.DateBirth
+            };
+
+            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, userDTO);
         }
 
         [Authorize]
@@ -154,10 +192,20 @@ namespace InspiraHub.Controllers
             _context.SaveChanges();
 
             _logger.Log("user was successfully updated", "");
-            User userPut = _context.Users.FirstOrDefault(u => u.Id == id);
+            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            {
+                Id = existingUser.Id,
+                Username = existingUser.Username,
+                Email = existingUser.Email,
+                UpdatedAt = existingUser.UpdatedAt,
+                Name = existingUser.Name,
+                LastName = existingUser.LastName,
+                DateBirth = existingUser.DateBirth
+            };
+            
             object result = new
             {
-                User = userPut,
+                User = userDTO,
                 Message = "user was successfully  updated"
             };
             return Ok(result);
@@ -210,15 +258,28 @@ namespace InspiraHub.Controllers
                 _logger.Log("bad request", "error");
                 return BadRequest(ModelState);
             }
+            user.UpdatedAt = DateTime.Now;
             _context.SaveChanges();
             _logger.Log("user was successfully partial updated", "");
 
-            User userPatch = _context.Users.FirstOrDefault(u => u.Id == id);
+            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                UpdatedAt = user.UpdatedAt,
+                Name = user.Name,
+                LastName = user.LastName,
+                DateBirth = user.DateBirth,
+
+            };
+
             object result = new
             {
-                User = userPatch,
+                User = userDTO,
                 Message = "user was successfully partial updated"
             };
+
             return Ok(result);
         }
 

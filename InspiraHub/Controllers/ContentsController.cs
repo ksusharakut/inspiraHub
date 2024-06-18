@@ -1,4 +1,5 @@
 ﻿using InspiraHub.Models;
+using InspiraHub.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -49,19 +50,19 @@ namespace InspiraHub.Controllers
         }
 
         [Authorize]
-        [HttpPost,
-            Produces("application/json"),
-            Consumes("application/json")]
+        [HttpPost]
+            [Produces("application/json")]
+            [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Content> CreateContent([FromBody] Content content)
+        public ActionResult<ContentDTO> CreateContent([FromBody] ContentDTO contentDTO)
         {
-            if (content == null)
+            if (contentDTO == null)
             {
                 return BadRequest("Content is null.");
             }
-            if (content.Id > 0)
+            if (contentDTO.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Content ID should not be set.");
             }
@@ -85,15 +86,32 @@ namespace InspiraHub.Controllers
                 return BadRequest("User not found.");
             }
 
-            // Установка полей
-            content.UserId = userIdFromToken;
-            content.User = user;
-            content.CreateAt = DateTime.Now;
+            Content content = new Content
+            {
+                UserId = userIdFromToken,
+                User = user,
+                Preview = contentDTO.Preview,
+                Title = contentDTO.Title,
+                Description = contentDTO.Description,
+                CreateAt = DateTime.Now,
+                ContentType = contentDTO.ContentType
+            };
 
             _context.Contents.Add(content);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetContentById), new { id = content.Id }, content);
+            //DTO для возврата в ответе
+            ContentDTO responceContentDTO = new ContentDTO
+            {
+                Id = content.Id,
+                UserId = content.UserId,
+                Preview = content.Preview,
+                Title = content.Title,
+                Description = content.Description,
+                CreateAt = content.CreateAt,
+                ContentType = content.ContentType
+            };
+            return CreatedAtAction(nameof(GetContentById), new { id = responceContentDTO.Id }, responceContentDTO);
         }
 
         [HttpPut("{id:int}", Name = "UpdateContent"),
