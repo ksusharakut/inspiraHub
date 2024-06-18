@@ -7514,11 +7514,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
+      "projectUniqueName": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
       "projectName": "InspiraHub",
-      "projectPath": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
+      "projectPath": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\InspiraHub.csproj",
       "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hp\\Desktop\\InspiraHub\\InspiraHub\\obj\\",
+      "outputPath": "D:\\Visual_Studio_Projects\\InspiraHub\\InspiraHub\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\общие компоненты вижуалки\\NuGetPackages"

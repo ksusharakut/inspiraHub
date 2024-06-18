@@ -29,13 +29,13 @@ namespace InspiraHub.Migrations
                     table.ForeignKey(
                         name: "FK_Comments_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Comments_Content_ContentId",
                         column: x => x.ContentId,
-                        principalTable: "Content",
+                        principalTable: "content",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });

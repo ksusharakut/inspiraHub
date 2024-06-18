@@ -47,7 +47,7 @@ public partial class InspirahubContext : DbContext
             entity.ToTable("comments");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('main_sequence'::regclass)")
+                .HasDefaultValueSql("nextval('comment_id_seq'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.ContentId).HasColumnName("content_id");
             entity.Property(e => e.CreateAt)
@@ -74,10 +74,10 @@ public partial class InspirahubContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("content_pkey");
 
-            entity.ToTable("contents");
+            entity.ToTable("content");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('main_sequence'::regclass)")
+                .HasDefaultValueSql("nextval('content_id_seq'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.ContentType)
                 .HasMaxLength(20)
@@ -95,8 +95,9 @@ public partial class InspirahubContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Contents)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("content_iduser_fkey");
+                .HasConstraintName("content_id_user_fkey");
         });
+
         modelBuilder.Entity<PasswordResetToken>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("password_reset_tokens_pkey");
@@ -104,7 +105,7 @@ public partial class InspirahubContext : DbContext
             entity.ToTable("password_reset_tokens");
 
             entity.Property(e => e.Id)
-            .HasDefaultValueSql("nextval('password_reset_tokens_Id_seq'::regclass)")
+            .HasDefaultValueSql("nextval('password_reset_tokens_id_seq'::regclass)")
             .HasColumnName("id");
             entity.Property(e => e.Email)
             .IsRequired()
@@ -126,7 +127,7 @@ public partial class InspirahubContext : DbContext
             entity.ToTable("users");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('my_first_sequence'::regclass)")
+                .HasDefaultValueSql("nextval('user_id_seq'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.DateBirth).HasColumnName("date_birth");
             entity.Property(e => e.Email)
@@ -148,8 +149,6 @@ public partial class InspirahubContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
         });
-        modelBuilder.HasSequence("main_sequence"); //TODO: убрать
-        modelBuilder.HasSequence("my_first_sequence").StartsAt(5L); //TODO: Убрать
 
         OnModelCreatingPartial(modelBuilder);
     }
