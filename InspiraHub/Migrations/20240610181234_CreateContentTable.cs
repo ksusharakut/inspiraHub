@@ -15,23 +15,23 @@ namespace InspiraHub.Migrations
                 name: "content", // Исправлено имя таблицы
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    Preview = table.Column<string>(type: "text", nullable: true),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    CreateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ContentType = table.Column<string>(type: "text", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    preview = table.Column<string>(type: "text", nullable: true),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    create_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    content_type = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_content", x => x.Id); // Исправлено имя таблицы
+                    table.PrimaryKey("PK_content", x => x.id); // Исправлено имя таблицы
                     table.ForeignKey(
-                        name: "FK_Contents_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Contents_User_userId",
+                        column: x => x.user_id,
                         principalTable: "users",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
         }

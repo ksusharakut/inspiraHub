@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace InspiraHub.Models;
 
@@ -20,6 +21,8 @@ public  class User
     public DateOnly DateBirth { get; set; }
 
     public string Password { get; set; } = null!;
+    
+    public string Role { get; set; } = null!;
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

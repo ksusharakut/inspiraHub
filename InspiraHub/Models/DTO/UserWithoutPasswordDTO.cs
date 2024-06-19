@@ -15,5 +15,6 @@
         public string LastName { get; set; } = null!;
 
         public DateOnly DateBirth { get; set; }
+        public string Role { get; set; } = null!;
     }
 }

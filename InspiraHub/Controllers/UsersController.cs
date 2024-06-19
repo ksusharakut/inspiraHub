@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using BCrypt.Net;
 using InspiraHub.Models.DTO;
+using System.Security.Claims;
 
 namespace InspiraHub.Controllers
 {
@@ -23,6 +24,15 @@ namespace InspiraHub.Controllers
         {
             _context = context;
             _logger = logger;
+        }
+
+        [HttpGet("Admin")]
+        [Authorize]
+        public IActionResult AdminsEndPiont()
+        {
+            var currentUser = GetCurrentUser();
+
+            return Ok($"hi {currentUser.Name}, you are an {currentUser.Role}");
         }
 
         [Authorize]
@@ -326,6 +336,26 @@ namespace InspiraHub.Controllers
 
             object result = new { UserDeletedId = id, Message = $"User with ID {id} has been successfully deleted" };
             return Ok(result);
+        }
+
+        private User GetCurrentUser()
+        {
+            ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+            {
+                IEnumerable<Claim> userClaims = identity.Claims;
+
+                return new User
+                {
+                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+                    Name = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
+                    LastName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Surname)?.Value,
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                };
+            }
+            return null;
         }
     }
 

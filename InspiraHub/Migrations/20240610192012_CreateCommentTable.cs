@@ -15,28 +15,28 @@ namespace InspiraHub.Migrations
                 name: "comments",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                      .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    ContentId = table.Column<long>(type: "bigint", nullable: false),
-                    UserComment = table.Column<string>(type: "text", nullable: true),
-                    CreateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    content_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_comment = table.Column<string>(type: "text", nullable: true),
+                    create_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    username = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Comments_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Comments_User_userId",
+                        column: x => x.user_id,
                         principalTable: "users",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Content_ContentId",
-                        column: x => x.ContentId,
+                        name: "FK_Comments_Content_contentId",
+                        column: x => x.content_id,
                         principalTable: "content",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
         }

@@ -23,7 +23,7 @@ namespace InspiraHub.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tokens", x => x.id);
+                    table.PrimaryKey("PK_tokens", x => x.id);
                 });
         }
 

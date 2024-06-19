@@ -57,7 +57,7 @@ public partial class InspirahubContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
-                .HasColumnName("user_name");
+                .HasColumnName("username");
 
             entity.HasOne(d => d.Content).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.ContentId)
@@ -148,6 +148,9 @@ public partial class InspirahubContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .HasColumnName("role");
         });
 
         OnModelCreatingPartial(modelBuilder);
