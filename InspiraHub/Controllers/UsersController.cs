@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using BCrypt.Net;
 using InspiraHub.Models.DTO;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using InspiraHub.Identity;
 
 namespace InspiraHub.Controllers
 {
@@ -24,15 +26,6 @@ namespace InspiraHub.Controllers
         {
             _context = context;
             _logger = logger;
-        }
-
-        [HttpGet("Admin")]
-        [Authorize]
-        public IActionResult AdminsEndPiont()
-        {
-            var currentUser = GetCurrentUser();
-
-            return Ok($"hi {currentUser.Name}, you are an {currentUser.Role}");
         }
 
         [Authorize]
@@ -97,12 +90,13 @@ namespace InspiraHub.Controllers
             return Ok(userDTO);
         }
 
-        [Authorize]
+        [Authorize(Policy = IdentityData.AdminRolePolicyName)]
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<UserWithoutPasswordDTO> CreateUser([FromBody] User user)
         {
@@ -338,25 +332,6 @@ namespace InspiraHub.Controllers
             return Ok(result);
         }
 
-        private User GetCurrentUser()
-        {
-            ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity == null)
-            {
-                IEnumerable<Claim> userClaims = identity.Claims;
-
-                return new User
-                {
-                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    Name = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
-                    LastName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Surname)?.Value,
-                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
-                };
-            }
-            return null;
-        }
     }
 
 

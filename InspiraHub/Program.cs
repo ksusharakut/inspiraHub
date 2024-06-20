@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using InspiraHub.Service;
+using InspiraHub.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -30,10 +31,17 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
+        //RoleClaimType = "role"
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(IdentityData.AdminRolePolicyName, p => 
+        p.RequireClaim(IdentityData.AdminRolePolicyName, "Admin"));
+    options.AddPolicy(IdentityData.RegularUserRolePolicyName, p =>
+        p.RequireClaim(IdentityData.RegularUserRolePolicyName, "RegularUser"));
+});
 
 // Add services to the container.
 builder.Services.AddControllers(option =>
@@ -57,7 +65,6 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-
 
 app.UseAuthorization();
 

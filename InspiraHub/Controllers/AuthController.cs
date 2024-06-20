@@ -27,6 +27,7 @@ namespace InspiraHub.Controllers
             _config = config;
         }
 
+        
         [HttpPost("registrate"),
             Produces("application/json"),
             Consumes("application/json")]
