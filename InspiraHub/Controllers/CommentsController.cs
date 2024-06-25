@@ -38,7 +38,6 @@ namespace InspiraHub.Controllers
             if (id == 0)
             {
                 return BadRequest();
-                //_logger.LogError("Get user Error with Id: " + id);
             }
             Comment comment = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
             if (comment == null)

@@ -28,17 +28,15 @@ namespace InspiraHub.Controllers
             _logger = logger;
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpGet,
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<UserWithoutPasswordDTO>> GetUsers()
         {
-            // Получаем всех пользователей из базы данных
             List<User> usersFromDb = _context.Users.ToList();
 
-            // Преобразуем пользователей в UserWithoutPasswordDTO
             List<UserWithoutPasswordDTO> usersDTO = usersFromDb.Select(u => new UserWithoutPasswordDTO
             {
                 Id = u.Id,
@@ -54,7 +52,7 @@ namespace InspiraHub.Controllers
             return usersDTO;
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpGet("{id:int}"),
             Produces("application/json"),
             Consumes("application/json")]
@@ -90,7 +88,7 @@ namespace InspiraHub.Controllers
             return Ok(userDTO);
         }
 
-        [Authorize(Policy = IdentityData.AdminRolePolicyName)]
+        [Authorize("Admin")]
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
@@ -332,6 +330,43 @@ namespace InspiraHub.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet("profile")]
+        [HttpGet("{id:int}"),
+            Produces("application/json"),
+            Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetProfile()
+        {
+            string userIdClaim = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !long.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Invalid token.");
+            }
+
+            var user = _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new UserProfileDTO
+                {
+                    Username = u.Username,
+                    Email = u.Email,
+                    Name = u.Name,
+                    LastName = u.LastName,
+                    DateBirth = u.DateBirth,
+                    UpdatedAt = u.UpdatedAt,
+                    Role = u.Role
+                })
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
     }
 
 

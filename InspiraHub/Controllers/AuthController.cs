@@ -12,6 +12,7 @@ using System.Net;
 using InspiraHub.Models.DTO;
 
 
+
 namespace InspiraHub.Controllers
 {
     [ApiController]
@@ -26,7 +27,6 @@ namespace InspiraHub.Controllers
             _context = context;
             _config = config;
         }
-
         
         [HttpPost("registrate"),
             Produces("application/json"),
@@ -103,7 +103,7 @@ namespace InspiraHub.Controllers
                 };
 
                 _context.PasswordResetTokens.Add(passResetToken);
-                _context.SaveChanges(); // Запись в базу данных до отправки письма
+                _context.SaveChanges();
 
                 string smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER");
                 string port = Environment.GetEnvironmentVariable("SMTP_PORT");
@@ -114,9 +114,8 @@ namespace InspiraHub.Controllers
                 using (SmtpClient client = new SmtpClient(smtpServer, Convert.ToInt16(port)))
                 {
                     client.Credentials = new NetworkCredential(username, password);
-                    client.EnableSsl = false;  // Отключено, так как не используется SSL/TLS на этом порту
+                    client.EnableSsl = false;
 
-                    // Создание сообщения
                     MailMessage message = new MailMessage();
                     message.From = new MailAddress(Environment.GetEnvironmentVariable("FROM_EMAIL"));
                     message.To.Add(passResetToken.Email);
@@ -159,14 +158,12 @@ namespace InspiraHub.Controllers
                 return NotFound(new { error = "Пользователь не найден или неверный код, попробуйте заново или вернитесь к генерации кода подтверждения" });
             }
 
-            // Обновление пароля пользователя
             user.Password = BCrypt.Net.BCrypt.HashPassword(passRecovery.NewPassword);
             user.UpdatedAt = DateTime.Now;
 
             _context.Users.Update(user);
             _context.SaveChanges();
 
-            // Удаление использованного токена 
             PasswordResetToken token = _context.PasswordResetTokens.FirstOrDefault(t => t.Email == passRecovery.Email && t.Token == passRecovery.Token);
             if (token != null)
             {
@@ -194,6 +191,25 @@ namespace InspiraHub.Controllers
             return NotFound("User not found");
         }
 
+        //[Authorize]
+        //[HttpPost("logout")]
+        //public IActionResult Logout()
+        //{
+        //    string authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        //    if (authHeader.StartsWith("Bearer "))
+        //    {
+        //        string token = authHeader.Substring("Bearer ".Length);
+
+        //        JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+        //        DateTime? expiration = jwtToken?.ValidTo;
+
+        //        if (expiration.HasValue)
+        //        {
+        //            _memoryCache.Set(token, token, expiration.Value);
+        //        }
+        //    }
+        //    return Ok(new { message = "Logged out successfully." });
+        //}
 
         private object Generate(User user)
         {
@@ -209,7 +225,7 @@ namespace InspiraHub.Controllers
                     new Claim("name", user.Name),
                     new Claim("lastName", user.LastName),
                     new Claim("dateBirth", user.DateBirth.ToString()),
-                    new Claim("role", user.Role)
+                    new Claim(ClaimTypes.Role, user.Role)
             };
 
             JwtSecurityToken token = new JwtSecurityToken(

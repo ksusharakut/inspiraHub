@@ -9,9 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using InspiraHub.Service;
 using InspiraHub.Identity;
+using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
 
 DotNetEnv.Env.Load();
 
@@ -30,20 +33,21 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
-        //RoleClaimType = "role"
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
+//builder.Services.AddTransient<TokenBlacklistHandler>();
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy(IdentityData.AdminRolePolicyName, p => 
-        p.RequireClaim(IdentityData.AdminRolePolicyName, "Admin"));
-    options.AddPolicy(IdentityData.RegularUserRolePolicyName, p =>
-        p.RequireClaim(IdentityData.RegularUserRolePolicyName, "RegularUser"));
+    options.AddPolicy("Admin", p => 
+        p.RequireClaim(ClaimTypes.Role, "Admin"));
+    options.AddPolicy("RegularUser", p =>
+        p.RequireClaim(ClaimTypes.Role, "RegularUser"));
 });
 
-// Add services to the container.
 builder.Services.AddControllers(option =>
 {
     option.ReturnHttpNotAcceptable = true;

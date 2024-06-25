@@ -67,7 +67,6 @@ namespace InspiraHub.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Content ID should not be set.");
             }
 
-            // Получение идентификатора пользователя из JWT-токена
             System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
@@ -79,7 +78,6 @@ namespace InspiraHub.Controllers
                 return Unauthorized("Invalid user id in token.");
             }
 
-            // Получение пользователя из базы данных
             User user = _context.Users.Find(userIdFromToken);
             if (user == null)
             {
@@ -100,7 +98,6 @@ namespace InspiraHub.Controllers
             _context.Contents.Add(content);
             _context.SaveChanges();
 
-            //DTO для возврата в ответе
             ContentDTO responceContentDTO = new ContentDTO
             {
                 Id = content.Id,
