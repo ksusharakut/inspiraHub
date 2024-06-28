@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InspiraHub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+57dd8f669c52022d7a95567638129f0b694281a9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fb495f26dfa85ebb146fc9d8502720e76138c97")]
 [assembly: System.Reflection.AssemblyProductAttribute("InspiraHub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InspiraHub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

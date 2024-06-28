@@ -1,20 +1,15 @@
 using InspiraHub.Logging;
 using InspiraHub.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using InspiraHub.Service;
-using InspiraHub.Identity;
 using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-
 
 DotNetEnv.Env.Load();
 
@@ -37,8 +32,6 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-
-//builder.Services.AddTransient<TokenBlacklistHandler>();
 
 builder.Services.AddAuthorization(options =>
 {

@@ -191,26 +191,6 @@ namespace InspiraHub.Controllers
             return NotFound("User not found");
         }
 
-        //[Authorize]
-        //[HttpPost("logout")]
-        //public IActionResult Logout()
-        //{
-        //    string authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-        //    if (authHeader.StartsWith("Bearer "))
-        //    {
-        //        string token = authHeader.Substring("Bearer ".Length);
-
-        //        JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
-        //        DateTime? expiration = jwtToken?.ValidTo;
-
-        //        if (expiration.HasValue)
-        //        {
-        //            _memoryCache.Set(token, token, expiration.Value);
-        //        }
-        //    }
-        //    return Ok(new { message = "Logged out successfully." });
-        //}
-
         private object Generate(User user)
         {
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")));
@@ -222,9 +202,6 @@ namespace InspiraHub.Controllers
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("id", user.Id.ToString()),
-                    new Claim("name", user.Name),
-                    new Claim("lastName", user.LastName),
-                    new Claim("dateBirth", user.DateBirth.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
             };
 

@@ -18,7 +18,7 @@ namespace InspiraHub.Service
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(10)); // Проверка каждые 10 секунд
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
             return Task.CompletedTask;
         }
 
@@ -46,7 +46,6 @@ namespace InspiraHub.Service
                     {
                         Console.WriteLine($"Error occurred while removing expired tokens: {ex.Message}");
                     }
-                    // _logger.LogInformation($"Removed {expiredTokens.Count} expired tokens.");
                 }
                 Interlocked.Increment(ref executionCount);
             }

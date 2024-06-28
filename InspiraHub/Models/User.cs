@@ -14,7 +14,7 @@ public  class User
 
     public DateTime UpdatedAt { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!;  //TODO: to change Name to FirstName
 
     public string LastName { get; set; } = null!;
 

@@ -12,6 +12,7 @@ using InspiraHub.Models.DTO;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using InspiraHub.Identity;
+using Newtonsoft.Json.Linq;
 
 namespace InspiraHub.Controllers
 {
@@ -28,38 +29,53 @@ namespace InspiraHub.Controllers
             _logger = logger;
         }
 
-        [Authorize("Admin")]
+        [Authorize]
         [HttpGet,
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<UserWithoutPasswordDTO>> GetUsers()
+        public ActionResult<IEnumerable<UserWithoutPasswordDTO>> GetUsersProfiles()
         {
             List<User> usersFromDb = _context.Users.ToList();
-
-            List<UserWithoutPasswordDTO> usersDTO = usersFromDb.Select(u => new UserWithoutPasswordDTO
+            string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            if (userRole == "Admin")
             {
-                Id = u.Id,
-                Username = u.Username,
-                Email = u.Email,
-                UpdatedAt = u.UpdatedAt,
-                Name = u.Name,
-                LastName = u.LastName,
-                DateBirth = u.DateBirth
-            }).ToList();
+                List<UserWithoutPasswordDTO> usersAdminDTO = usersFromDb.Select(u => new UserWithoutPasswordDTO
+                {
+                    Id = u.Id,
+                    Username = u.Username,
+                    Email = u.Email,
+                    UpdatedAt = u.UpdatedAt,
+                    Name = u.Name,
+                    LastName = u.LastName,
+                    DateBirth = u.DateBirth,
+                    Role = u.Role,
+                }).ToList();
 
-            _logger.Log("getting all users", "");
-            return usersDTO;
+                return Ok(usersAdminDTO);
+            }
+            else
+            {
+                List<UserGetAllUsersDTO> usersRegularUserDTO = usersFromDb.Select(u => new UserGetAllUsersDTO
+                {
+                    Id = u.Id,
+                    Username =u.Username,
+                    Email = u.Email,
+                    Role = u.Role
+                }).ToList();
+
+                return Ok(usersRegularUserDTO);
+            }
         }
 
-        [Authorize("Admin")]
+        [Authorize]
         [HttpGet("{id:int}"),
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<UserWithoutPasswordDTO> GetUserById(int id)
+        public ActionResult<UserWithoutPasswordDTO> GetUserProfileById(int id)
         {
             if (id == 0)
             {
@@ -75,17 +91,35 @@ namespace InspiraHub.Controllers
             }
             _logger.Log("getting user with id: " + id, "");
 
-            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            if (userRole == "Admin")
             {
-                Id = user.Id,
-                Username = user.Name,
-                Email = user.Email,
-                UpdatedAt = user.UpdatedAt,
-                Name = user.Name,
-                LastName = user.LastName,
-                DateBirth = user.DateBirth
-            };
-            return Ok(userDTO);
+                UserWithoutPasswordDTO userAdminDTO = new UserWithoutPasswordDTO
+                {
+                    Id = user.Id,
+                    Username = user.Name,
+                    Email = user.Email,
+                    UpdatedAt = user.UpdatedAt,
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    DateBirth = user.DateBirth
+                };
+                return Ok(userAdminDTO);
+            }
+            else
+            {
+                UserGetUserProfileDTO userRegularUserDTO = new UserGetUserProfileDTO
+                {
+                    Id=user.Id,
+                    Username=user.Username,
+                    Name=user.Name,
+                    Email=user.Email,
+                    LastName=user.LastName,
+                    DateBirth = user.DateBirth,
+                    Role = user.Role                    
+                };
+                return Ok(userRegularUserDTO);
+            }
         }
 
         [Authorize("Admin")]
@@ -138,96 +172,91 @@ namespace InspiraHub.Controllers
                 UpdatedAt = user.UpdatedAt,
                 Name = user.Name,
                 LastName = user.LastName,
-                DateBirth = user.DateBirth
+                DateBirth = user.DateBirth,
+                Role = user.Role
             };
 
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, userDTO);
+            return CreatedAtAction(nameof(GetUserProfileById), new { id = user.Id }, userDTO);
         }
 
+        //[Authorize]
+        //[HttpPut("{id:int}", Name = "UpdateUser"),
+        //   Produces("application/json"),
+        //   Consumes("application/json")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
+        //{
+        //    System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+        //    if (userIdClaim == null)
+        //    {
+        //        _logger.Log("User claim not found", "error");
+        //        return Unauthorized();
+        //    }
+
+        //    int userIdFromToken;
+        //    if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
+        //    {
+        //        _logger.Log("Invalid user id in token", "error");
+        //        return Unauthorized();
+        //    }
+
+        //    if (id != userIdFromToken)
+        //    {
+        //        _logger.Log("User tried to delete another user", "error");
+        //        return Forbid();
+        //    }
+
+        //    User existingUser = _context.Users.FirstOrDefault(u => u.Id == id);
+        //    if (existingUser == null)
+        //    {
+        //        _logger.Log("bad request", "error");
+        //        return BadRequest();
+        //    }
+
+        //    existingUser.Username = updatedUser.Username;
+        //    existingUser.UpdatedAt = DateTime.Now;
+        //    if (!string.IsNullOrEmpty(updatedUser.Password))
+        //    {
+        //        existingUser.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
+        //    }
+        //    existingUser.Email = updatedUser.Email;
+        //    existingUser.LastName = updatedUser.LastName;
+        //    existingUser.DateBirth = updatedUser.DateBirth;
+        //    existingUser.Name = updatedUser.Name;
+
+        //    _context.SaveChanges();
+
+        //    _logger.Log("user was successfully updated", "");
+        //    UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+        //    {
+        //        Id = existingUser.Id,
+        //        Username = existingUser.Username,
+        //        Email = existingUser.Email,
+        //        UpdatedAt = existingUser.UpdatedAt,
+        //        Name = existingUser.Name,
+        //        LastName = existingUser.LastName,
+        //        DateBirth = existingUser.DateBirth
+        //    };
+
+        //    object result = new
+        //    {
+        //        User = userDTO,
+        //        Message = "user was successfully  updated"
+        //    };
+        //    return Ok(result);
+
+        //}
+
         [Authorize]
-        [HttpPut("{id:int}", Name ="UpdateUser"),
-            Produces("application/json"),
-            Consumes("application/json")]
+        [HttpPatch("{id:int}", Name = "UpdateUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
-        {
-            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
-            if (userIdClaim == null)
-            {
-                _logger.Log("User claim not found", "error");
-                return Unauthorized();
-            }
-
-            int userIdFromToken;
-            if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
-            {
-                _logger.Log("Invalid user id in token", "error");
-                return Unauthorized();
-            }
-
-            if (id != userIdFromToken)
-            {
-                _logger.Log("User tried to delete another user", "error");
-                return Forbid();
-            }
-
-            User existingUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            if (existingUser == null)
-            {
-                _logger.Log("bad request", "error");
-                return BadRequest();
-            }
-
-            existingUser.Username = updatedUser.Username;
-            existingUser.UpdatedAt = DateTime.Now;
-            if (!string.IsNullOrEmpty(updatedUser.Password))
-            {
-                existingUser.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
-            }
-            existingUser.Email = updatedUser.Email;
-            existingUser.LastName = updatedUser.LastName;
-            existingUser.DateBirth = updatedUser.DateBirth;
-            existingUser.Name = updatedUser.Name;
-
-            _context.SaveChanges();
-
-            _logger.Log("user was successfully updated", "");
-            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
-            {
-                Id = existingUser.Id,
-                Username = existingUser.Username,
-                Email = existingUser.Email,
-                UpdatedAt = existingUser.UpdatedAt,
-                Name = existingUser.Name,
-                LastName = existingUser.LastName,
-                DateBirth = existingUser.DateBirth
-            };
-            
-            object result = new
-            {
-                User = userDTO,
-                Message = "user was successfully  updated"
-            };
-            return Ok(result);
-            
-        }
-
-        [Authorize]
-        [HttpPatch("{id:int}", Name = "UpdatePartialUser"),
-            Produces("application/json"),
-            Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialUser(int id, JsonPatchDocument<User> patch)
+        public IActionResult UpdateUser(int id, [FromBody] JsonPatchDocument<UserUpdateDTO> patch)
         {
-            if (patch == null || id == 0)
-            {
-                _logger.Log("bad request", "error");
-                return BadRequest();
-            }
-
             System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
@@ -235,36 +264,66 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            int userIdFromToken;
-            if (!int.TryParse(userIdClaim.Value, out userIdFromToken))
+            if (!int.TryParse(userIdClaim.Value, out int userIdFromToken))
             {
-                _logger.Log("Invalid user id in token", "error");
                 return Unauthorized();
             }
 
-            if (id != userIdFromToken)
+            bool isAdmin = User.IsInRole("Admin");
+
+            if (id != userIdFromToken && !isAdmin)
             {
-                _logger.Log("User tried to delete another user", "error");
                 return Forbid();
             }
 
-            User user = _context.Users.FirstOrDefault(u =>u.Id == id);
-            if(user == null)
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
             {
-                _logger.Log("bad request", "error");
-                return BadRequest();
+                return NotFound();
             }
-            patch.ApplyTo(user, ModelState);
+
+            var userDTO = new UserUpdateDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Name = user.Name,
+                LastName = user.LastName,
+                DateBirth = user.DateBirth,
+                Role = user.Role,
+                UpdatedAt = DateTime.Now,
+            };
+
+            patch.ApplyTo(userDTO, ModelState);
+
             if (!ModelState.IsValid)
             {
-                _logger.Log("bad request", "error");
                 return BadRequest(ModelState);
             }
-            user.UpdatedAt = DateTime.Now;
-            _context.SaveChanges();
-            _logger.Log("user was successfully partial updated", "");
 
-            UserWithoutPasswordDTO userDTO = new UserWithoutPasswordDTO
+            if(_context.Users.Any(u => u.Email == userDTO.Email && u.Id != id))
+            {
+                ModelState.AddModelError("Email", "Email already exist");
+                return BadRequest(ModelState);
+            }
+
+            if (isAdmin)
+            {
+                // Admin can update user role
+                user.Role = userDTO.Role; // Update role in database
+            }
+
+            user.Username = userDTO.Username;
+            user.Email = userDTO.Email;
+            user.Name = userDTO.Name;
+            user.LastName = userDTO.LastName;
+            user.DateBirth = userDTO.DateBirth;
+            user.UpdatedAt = DateTime.Now;
+
+            // Save changes to the database
+            _context.SaveChanges();
+
+            // Return updated user DTO
+            var updatedUserDTO = new UserWithoutPasswordDTO
             {
                 Id = user.Id,
                 Username = user.Username,
@@ -273,17 +332,18 @@ namespace InspiraHub.Controllers
                 Name = user.Name,
                 LastName = user.LastName,
                 DateBirth = user.DateBirth,
-
+                Role = user.Role
             };
 
-            object result = new
+            var result = new
             {
-                User = userDTO,
-                Message = "user was successfully partial updated"
+                User = updatedUserDTO,
+                Message = "User was successfully updated"
             };
 
             return Ok(result);
         }
+    
 
         [Authorize]
         [HttpDelete("{id:int}", Name = "DeleteUser"),
@@ -309,7 +369,9 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            if (id != userIdFromToken)
+            var isAdmin = User.IsInRole("Admin");
+
+            if (id != userIdFromToken && !isAdmin)
             {
                 _logger.Log("User tried to delete another user", "error");
                 return Forbid();
@@ -332,15 +394,15 @@ namespace InspiraHub.Controllers
 
 
         [HttpGet("profile")]
-        [HttpGet("{id:int}"),
-            Produces("application/json"),
-            Consumes("application/json")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetProfile()
         {
-            string userIdClaim = User.FindFirst("id")?.Value;
+            var userIdClaim = User.FindFirst("id")?.Value;
+
             if (string.IsNullOrEmpty(userIdClaim) || !long.TryParse(userIdClaim, out var userId))
             {
                 return Unauthorized("Invalid token.");
@@ -350,7 +412,8 @@ namespace InspiraHub.Controllers
                 .Where(u => u.Id == userId)
                 .Select(u => new UserProfileDTO
                 {
-                    Username = u.Username,
+                    Id = u.Id,
+                    Username = u.Name,
                     Email = u.Email,
                     Name = u.Name,
                     LastName = u.LastName,
