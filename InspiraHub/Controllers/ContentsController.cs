@@ -3,6 +3,7 @@ using InspiraHub.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InspiraHub.Controllers
 {
@@ -19,22 +20,35 @@ namespace InspiraHub.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Content>> GetContent()
+        public ActionResult<IEnumerable<ContentDTO>> GetContent()
         {
-            List<Content> contents = _context.Contents.ToList();
+            List<ContentDTO> contents = _context.Contents
+                .Select(c => new ContentDTO
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    ContentType = c.ContentType,
+                    CreateAt = DateTime.Now,
+                    Preview = c.Preview,
+                    Description = c.Description,
+                    UserId = c.UserId
+                })
+                .ToList();
             _logger.LogInformation("getting all contents");
             return contents;
         }
 
+        [Authorize]
         [HttpGet("{id:int}"),
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetContentById(int id)
+        public ActionResult<ContentDTO> GetContentById(int id)
         {
             if (id == 0)
             {
@@ -46,7 +60,18 @@ namespace InspiraHub.Controllers
             {
                 return NotFound();
             }
-            return Ok(content);
+
+            var contentDTO = new ContentDTO
+            {
+                Id = content.Id,
+                Title = content.Title,
+                ContentType = content.ContentType,
+                CreateAt = DateTime.Now,
+                Preview = content.Preview,
+                Description = content.Description,
+                UserId = content.UserId
+            };
+            return Ok(contentDTO);
         }
 
         [Authorize]
@@ -111,91 +136,140 @@ namespace InspiraHub.Controllers
             return CreatedAtAction(nameof(GetContentById), new { id = responceContentDTO.Id }, responceContentDTO);
         }
 
-        [HttpPut("{id:int}", Name = "UpdateContent"),
-            Produces("application/json"),
-            Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateContent(int id, [FromBody] Content content)
-        {
-            Content existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-            if (existingContent == null)
-            {
-                return BadRequest();
-            }
+        //[Authorize]
+        //[HttpPatch("{id:int}", Name = "UpdateContent"),
+        //    Produces("application/json"),
+        //    Consumes("application/json")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public IActionResult UpdateContent(int id, [FromBody] Content content)
+        //{
+        //    Content existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+        //    if (existingContent == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            existingContent.Preview = existingContent.Preview;
-            existingContent.User = existingContent.User;
-            existingContent.UserId = existingContent.UserId;
-            existingContent.Title = existingContent.Title;  
-            existingContent.Description = existingContent.Description;
-            existingContent.CreateAt = DateTime.UtcNow;
-            existingContent.ContentType = existingContent.ContentType;
+        //    
 
-            _context.SaveChanges();
-            Content contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-            object result = new
-            {
-                Content = contentPut,
-                Message = "content was successfully updated"
-            };
-            return Ok(result);
-        }
 
+        //    existingContent.Preview = existingContent.Preview;
+        //    existingContent.User = existingContent.User;
+        //    existingContent.UserId = existingContent.UserId;
+        //    existingContent.Title = existingContent.Title;  
+        //    existingContent.Description = existingContent.Description;
+        //    existingContent.CreateAt = DateTime.UtcNow;
+        //    existingContent.ContentType = existingContent.ContentType;
+
+        //    _context.SaveChanges();
+        //    Content contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+        //    object result = new
+        //    {
+        //        Content = contentPut,
+        //        Message = "content was successfully updated"
+        //    };
+        //    return Ok(result);
+        //}
+
+        [Authorize]
         [HttpPatch("{id:int}", Name = "UpdatePartialContent"),
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialContent(int id, JsonPatchDocument<Content> patch)
+        public IActionResult UpdatePartialContent(int id, [FromBody] JsonPatchDocument<Content> patch)
         {
             if (patch == null || id == 0)
             {
                 return BadRequest();
             }
+
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+            if(userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userIdFromToken))
+            {
+                return Unauthorized("Invalid user claim.");
+            }
+
             Content content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+
+            bool isAdmin = User.IsInRole("Admin");
+            bool isOwner = content.UserId == userIdFromToken;
+
+            if(!isAdmin && !isOwner)
+            {
+                return Forbid("you are not allowed to update this content");
+            }
+
             patch.ApplyTo(content, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             _context.SaveChanges();
-            Content contentPatch = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
+
+            ContentDTO contentDTO = new ContentDTO()
+            {
+                Id = content.Id,
+                UserId = content.UserId,
+                Preview = content.Preview,
+                Title = content.Title,
+                Description = content.Description,
+                CreateAt = content.CreateAt,
+                ContentType = content.ContentType
+            };
+
             object result = new
             {
-                Content = contentPatch,
+                Content = contentDTO,
                 Message = "content was successfully partial updated"
             };
             return Ok(result);
         }
 
-
         [Authorize]
-        [HttpDelete("{id:int}", Name = "DeleteContent"),
-            Produces("application/json"),
-            Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete("{id:int}", Name = "DeleteContent")]
+        [Produces("application/json")]
         public IActionResult DeleteContent(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
+
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+            if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userIdFromToken))
+            {
+                return Unauthorized("Invalid user claim.");
+            }
+
             Content content = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
             if (content == null)
             {
                 return NotFound();
             }
+
+            bool isAdmin = User.IsInRole("Admin");
+            bool isOwner = content.UserId == userIdFromToken;
+
+            if (!isAdmin && !isOwner)
+            {
+                return Forbid();
+            }
+
             _context.Contents.Remove(content);
             _context.SaveChanges();
-            object result = new { ContentDeletedId = id, Message = $"Content with ID {id} has been successfully deleted" };
+
+            object result = new
+            {
+                ContentDeletedId = id,
+                Message = $"Content with ID {id} has been successfully deleted"
+            };
             return Ok(result);
         }
     }
