@@ -12,7 +12,7 @@ namespace InspiraHub.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "content", // Исправлено имя таблицы
+                name: "content", 
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -26,7 +26,7 @@ namespace InspiraHub.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_content", x => x.id); // Исправлено имя таблицы
+                    table.PrimaryKey("PK_content", x => x.id);  
                     table.ForeignKey(
                         name: "FK_Contents_User_userId",
                         column: x => x.user_id,
@@ -39,7 +39,7 @@ namespace InspiraHub.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "content"); // Исправлено имя таблицы
+                name: "content"); 
         }
     }
 }

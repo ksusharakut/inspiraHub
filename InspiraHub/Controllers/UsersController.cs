@@ -46,7 +46,7 @@ namespace InspiraHub.Controllers
                     Username = u.Username,
                     Email = u.Email,
                     UpdatedAt = u.UpdatedAt,
-                    Name = u.Name,
+                    FirstName = u.FirstName,
                     LastName = u.LastName,
                     DateBirth = u.DateBirth,
                     Role = u.Role,
@@ -97,10 +97,10 @@ namespace InspiraHub.Controllers
                 UserWithoutPasswordDTO userAdminDTO = new UserWithoutPasswordDTO
                 {
                     Id = user.Id,
-                    Username = user.Name,
+                    Username = user.Username,
                     Email = user.Email,
                     UpdatedAt = user.UpdatedAt,
-                    Name = user.Name,
+                    FirstName = user.FirstName,
                     LastName = user.LastName,
                     DateBirth = user.DateBirth
                 };
@@ -112,7 +112,7 @@ namespace InspiraHub.Controllers
                 {
                     Id=user.Id,
                     Username=user.Username,
-                    Name=user.Name,
+                    FirstName=user.FirstName,
                     Email=user.Email,
                     LastName=user.LastName,
                     DateBirth = user.DateBirth,
@@ -170,7 +170,7 @@ namespace InspiraHub.Controllers
                 Username = user.Username,
                 Email = user.Email,
                 UpdatedAt = user.UpdatedAt,
-                Name = user.Name,
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateBirth = user.DateBirth,
                 Role = user.Role
@@ -206,17 +206,17 @@ namespace InspiraHub.Controllers
                 return Forbid();
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            User user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userDTO = new UserUpdateDTO
+            UserUpdateDTO userDTO = new UserUpdateDTO
             {
                 Username = user.Username,
                 Email = user.Email,
-                Name = user.Name,
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateBirth = user.DateBirth,
                 Role = user.Role,
@@ -238,34 +238,31 @@ namespace InspiraHub.Controllers
 
             if (isAdmin)
             {
-                // Admin can update user role
-                user.Role = userDTO.Role; // Update role in database
+                user.Role = userDTO.Role; 
             }
 
             user.Username = userDTO.Username;
             user.Email = userDTO.Email;
-            user.Name = userDTO.Name;
+            user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
             user.DateBirth = userDTO.DateBirth;
             user.UpdatedAt = DateTime.Now;
 
-            // Save changes to the database
             _context.SaveChanges();
 
-            // Return updated user DTO
-            var updatedUserDTO = new UserWithoutPasswordDTO
+            UserWithoutPasswordDTO updatedUserDTO = new UserWithoutPasswordDTO
             {
                 Id = user.Id,
                 Username = user.Username,
                 Email = user.Email,
                 UpdatedAt = user.UpdatedAt,
-                Name = user.Name,
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateBirth = user.DateBirth,
                 Role = user.Role
             };
 
-            var result = new
+            object result = new
             {
                 User = updatedUserDTO,
                 Message = "User was successfully updated"
@@ -285,7 +282,7 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteUser(int id)
         {
-            var userIdClaim = User.FindFirst("id");
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
             if (userIdClaim == null)
             {
                 _logger.Log("User claim not found", "error");
@@ -299,7 +296,7 @@ namespace InspiraHub.Controllers
                 return Unauthorized();
             }
 
-            var isAdmin = User.IsInRole("Admin");
+            bool isAdmin = User.IsInRole("Admin");
 
             if (id != userIdFromToken && !isAdmin)
             {
@@ -318,7 +315,11 @@ namespace InspiraHub.Controllers
             _context.SaveChanges();
             _logger.Log($"User {id} was successfully deleted", "info");
 
-            object result = new { UserDeletedId = id, Message = $"User with ID {id} has been successfully deleted" };
+            object result = new 
+            { 
+                UserDeletedId = id, 
+                Message = $"User with ID {id} has been successfully deleted" 
+            };
             return Ok(result);
         }
 
@@ -331,21 +332,21 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetProfile()
         {
-            var userIdClaim = User.FindFirst("id")?.Value;
+             string userIdClaim = User.FindFirst("id")?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !long.TryParse(userIdClaim, out var userId))
             {
                 return Unauthorized("Invalid token.");
             }
 
-            var user = _context.Users
+            UserProfileDTO user = _context.Users
                 .Where(u => u.Id == userId)
                 .Select(u => new UserProfileDTO
                 {
                     Id = u.Id,
-                    Username = u.Name,
+                    Username = u.Username,
                     Email = u.Email,
-                    Name = u.Name,
+                    FirstName = u.FirstName,
                     LastName = u.LastName,
                     DateBirth = u.DateBirth,
                     UpdatedAt = u.UpdatedAt,

@@ -61,7 +61,7 @@ namespace InspiraHub.Controllers
                 return NotFound();
             }
 
-            var contentDTO = new ContentDTO
+            ContentDTO contentDTO = new ContentDTO
             {
                 Id = content.Id,
                 Title = content.Title,
@@ -85,14 +85,16 @@ namespace InspiraHub.Controllers
         {
             if (contentDTO == null)
             {
-                return BadRequest("Content is null.");
+                return BadRequest("Content is null");
             }
+
             if (contentDTO.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Content ID should not be set.");
             }
 
             System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+
             if (userIdClaim == null)
             {
                 return Unauthorized("User claim not found in token.");
@@ -104,6 +106,7 @@ namespace InspiraHub.Controllers
             }
 
             User user = _context.Users.Find(userIdFromToken);
+
             if (user == null)
             {
                 return BadRequest("User not found.");
@@ -133,44 +136,12 @@ namespace InspiraHub.Controllers
                 CreateAt = content.CreateAt,
                 ContentType = content.ContentType
             };
-            return CreatedAtAction(nameof(GetContentById), new { id = responceContentDTO.Id }, responceContentDTO);
+            return CreatedAtAction(nameof(GetContentById), new 
+            { 
+                id = responceContentDTO.Id 
+            }, 
+            responceContentDTO);
         }
-
-        //[Authorize]
-        //[HttpPatch("{id:int}", Name = "UpdateContent"),
-        //    Produces("application/json"),
-        //    Consumes("application/json")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public IActionResult UpdateContent(int id, [FromBody] Content content)
-        //{
-        //    Content existingContent = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-        //    if (existingContent == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    
-
-
-        //    existingContent.Preview = existingContent.Preview;
-        //    existingContent.User = existingContent.User;
-        //    existingContent.UserId = existingContent.UserId;
-        //    existingContent.Title = existingContent.Title;  
-        //    existingContent.Description = existingContent.Description;
-        //    existingContent.CreateAt = DateTime.UtcNow;
-        //    existingContent.ContentType = existingContent.ContentType;
-
-        //    _context.SaveChanges();
-        //    Content contentPut = _context.Contents.FirstOrDefault(cnt => cnt.Id == id);
-        //    object result = new
-        //    {
-        //        Content = contentPut,
-        //        Message = "content was successfully updated"
-        //    };
-        //    return Ok(result);
-        //}
 
         [Authorize]
         [HttpPatch("{id:int}", Name = "UpdatePartialContent"),

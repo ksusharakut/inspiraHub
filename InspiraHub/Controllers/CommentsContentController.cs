@@ -1,6 +1,10 @@
 ﻿using InspiraHub.Models;
+using InspiraHub.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace InspiraHub.Controllers
 {
@@ -16,126 +20,185 @@ namespace InspiraHub.Controllers
             _context = context;
             _logger = logger;
         }
-
-        [HttpGet,
-            Produces("application/json"),
-            Consumes("application/json")]
+        [Authorize]
+        [HttpGet]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Comment>> GetCommentToContent()
+        public ActionResult<IEnumerable<CommentDTO>> GetCommentToContent()
         {
-            List<Comment> comments = _context.Comments.ToList();
+            var comments = _context.Comments.ToList();
 
-            return comments;
+            var commentDTOs = comments.Select(c => new CommentDTO
+            {
+                Id = c.Id,
+                UserId = c.UserId,
+                ContentId = c.ContentId,
+                UserComment = c.UserComment,
+                CreateAt = c.CreateAt,
+                UserName = c.UserName
+            }).ToList();
+
+            return Ok(commentDTOs);
         }
 
-        [HttpGet("{id:int}"),
-            Produces("application/json"),
-            Consumes("application/json")]
+        [Authorize]
+        [HttpGet("{id:int}")]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetCommentToContentById(int id)
+        public ActionResult<CommentDTO> GetCommentToContentById(long contentId, int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            Comment comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+
+            Comment comment = _context.Comments.FirstOrDefault(u => u.Id == id && u.ContentId == contentId);
+
             if (comment == null)
             {
                 return NotFound();
             }
-            return Ok(comment);
+
+            CommentDTO commentDTO = new CommentDTO
+            {
+                Id = comment.Id,
+                UserId = comment.UserId,
+                ContentId = comment.ContentId,
+                UserComment = comment.UserComment,
+                CreateAt = comment.CreateAt,
+                UserName = comment.UserName
+            };
+
+            return Ok(commentDTO);
         }
 
+        [Authorize]
         [HttpPost,
             Produces("application/json"),
             Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Comment> CreateCommentToContent([FromBody] Comment comment)
+        public ActionResult CreateCommentToContent(long contentId, [FromBody] CommentInputModelDTO commentInputDTO)
         {
+            Content content = _context.Contents.FirstOrDefault(c => c.Id == contentId);
+            if(content == null)
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (comment == null)
-            {
-                return BadRequest(comment);
-            }
-            if (comment.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
 
-            comment.Id = _context.Comments.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-            _context.Comments.Add(comment);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetCommentToContentById), new { id = comment.Id }, comment);
-        }
+            System.Security.Claims.Claim userIdClaim = User.FindFirst("id");
+            System.Security.Claims.Claim userNameClaim = User.FindFirst("username");
 
-        [HttpPut("{id:int}", Name = "UpdateCommentToContent"),
-            Produces("application/json"),
-            Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateCommentToContent(int id, [FromBody] Comment comment)
-        {
-            Comment existingComment = _context.Comments.FirstOrDefault(u => u.Id == id);
-            if (existingComment == null)
+            if (userIdClaim == null || userNameClaim == null)
             {
-                return BadRequest();
+                return Unauthorized("User claim not found in token.");
             }
 
-            existingComment.UserComment = existingComment.UserComment;
-            existingComment.UserName = existingComment.UserName;
-            existingComment.UserId = existingComment.UserId;
-            existingComment.User = existingComment.User;
-            existingComment.Content = existingComment.Content;
-
-            _context.SaveChanges();
-            Comment commentPut = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
-            object result = new
+            if (!long.TryParse(userIdClaim.Value, out long userIdFromToken))
             {
-                User = commentPut,
-                Message = "comment was successfully updated"
+                return Unauthorized("Invalid user id in token.");
+            }
+
+            Comment newComment = new Comment
+{
+                UserId = userIdFromToken,
+                ContentId = contentId,
+                UserComment = commentInputDTO.UserComment,
+                UserName = userNameClaim.Value,
+                CreateAt = DateTime.Now
             };
-            return Ok(result);
+
+            _context.Comments.Add(newComment);
+            _context.SaveChanges();
+
+            CommentDTO commentDTO = new CommentDTO
+            {
+                Id = newComment.Id,
+                UserId = newComment.UserId,
+                ContentId = contentId,
+                UserComment = newComment.UserComment,
+                CreateAt = newComment.CreateAt,
+                UserName = newComment.UserName
+            };
+
+            return CreatedAtAction(nameof(GetCommentToContentById), new 
+            {
+                contentId = contentId,
+                id = newComment.Id },
+                commentDTO);
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialCommentToContent"),
-            Produces("application/json"),
-            Consumes("application/json")]
+        [Authorize]
+        [HttpPatch("{id:int}", Name = "UpdateCommentToContent")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialCommentToContent(int id, JsonPatchDocument<Comment> patch)
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public IActionResult UpdatePartialCommentToContent(int id, [FromBody] JsonPatchDocument<Comment> patch)
         {
             if (patch == null || id == 0)
             {
                 return BadRequest();
             }
-            Comment comment = _context.Comments.FirstOrDefault(u => u.Id == id);
+
+            System.Security.Claims.Claim userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userIdFromToken))
+            {
+                return Unauthorized("Invalid user claim.");
+            }
+
+            Comment comment = _context.Comments.FirstOrDefault(c => c.Id == id);
+
             if (comment == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+
+            bool isAdmin = User.IsInRole("Admin");
+            bool isOwner = comment.UserId == userIdFromToken;
+
+            if (!isAdmin && !isOwner)
+            {
+                return Forbid("You are not allowed to update this comment");
+            }
+
             patch.ApplyTo(comment, ModelState);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             _context.SaveChanges();
-            Comment commentPatch = _context.Comments.FirstOrDefault(cmn => cmn.Id == id);
+
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Id = comment.Id,
+                UserId = comment.UserId,
+                ContentId = comment.ContentId, 
+                UserComment = comment.UserComment,
+                CreateAt = comment.CreateAt,
+                UserName = comment.UserName
+            };
+
             object result = new
             {
-                User = commentPatch,
-                Message = "comment was successfully partial updated"
+                Comment = commentDTO,
+                Message = "Comment was successfully partially updated"
             };
             return Ok(result);
         }
 
+        [Authorize]
         [HttpDelete("{id:int}", Name = "DeleteCommentToContent"),
             Produces("application/json"),
             Consumes("application/json")]
@@ -144,18 +207,28 @@ namespace InspiraHub.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DeleteCommentToContent(int id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (id == 0)
             {
                 return BadRequest();
             }
+
             Comment comment = _context.Comments.FirstOrDefault(u => u.Id == id);
             if (comment == null)
             {
                 return NotFound();
             }
+
+            if (comment.UserId.ToString() != userId && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             _context.Comments.Remove(comment);
             _context.SaveChanges();
-            object result = new { commentDeletedId = id, Message = $"comment with ID {id} has been successfully deleted" };
+
+            object result = new { commentDeletedId = id, Message = $"Comment with ID {id} has been successfully deleted" };
             return Ok(result);
         }
     }

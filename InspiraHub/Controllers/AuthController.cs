@@ -55,7 +55,7 @@ namespace InspiraHub.Controllers
             {
                 Username = userDTO.Username,
                 Email = userDTO.Email,
-                Name = userDTO.Name,
+                FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
                 DateBirth = userDTO.DateBirth,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password),
@@ -70,7 +70,7 @@ namespace InspiraHub.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
-                Name = user.Name,
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateBirth = user.DateBirth,
                 Username = user.Username,
@@ -198,9 +198,10 @@ namespace InspiraHub.Controllers
 
             Claim[] claims = new[]
             {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("username", user.Username),
                     new Claim("id", user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
             };
@@ -223,7 +224,7 @@ namespace InspiraHub.Controllers
                     user.Username,
                     user.Email,
                     user.UpdatedAt,
-                    user.Name,
+                    user.FirstName,
                     user.LastName,
                     user.DateBirth,
                     user.Role

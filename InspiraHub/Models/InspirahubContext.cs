@@ -136,9 +136,9 @@ public partial class InspirahubContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(50)
                 .HasColumnName("last_name");
-            entity.Property(e => e.Name)
+            entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
-                .HasColumnName("name");
+                .HasColumnName("first_name");
             entity.Property(e => e.Password)
                 .HasMaxLength(100)
                 .HasColumnName("password");
